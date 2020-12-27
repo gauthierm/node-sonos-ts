@@ -701,7 +701,9 @@ describe('SonosDevice', () => {
       
       
     });
-
+  });
+  
+  describe('PlayNotification(...)', () => {
     it('plays two notifications', async (done) => {
 
       const currentVolume = 6;
