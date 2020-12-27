@@ -87,7 +87,20 @@ describe('MetadataHelper', () => {
   })
 
   describe('ParseDIDLTrack', () => {
-    it('parsed r:streamContent correctly 2', () => {
+    it('decodes html entities', (done) => {
+      const album = 'Christmas &amp; New Year';
+      const title = 'Bell&apos;s';
+      const didl = {
+        'upnp:album': album,
+        'dc:title': title
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).to.has.property('Album','Christmas & New Year');
+      expect(result).to.has.property('Title', 'Bell\'s');
+      done();
+    });
+
+    it('parsed r:streamContent correctly 2', (done) => {
       const artist = 'Guus Meeuwis';
       const title = 'Brabant'
       const id = 'FAKE_ITEM_ID'
@@ -100,7 +113,8 @@ describe('MetadataHelper', () => {
       expect(result).to.have.nested.property('Artist', artist);
       expect(result).to.have.nested.property('Title', title);
       expect(result).to.have.nested.property('ItemId', id);
-    })
+      done();
+    });
 
     it('parsed r:streamContent and r:radioShowMd correctly', () => {
       const artist = 'Guus Meeuwis';

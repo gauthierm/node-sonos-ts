@@ -3,7 +3,37 @@ import { TestHelpers } from '../test-helpers';
 import { HTControlService } from '../../src/services/ht-control.service';
 
 describe('HTControlService', () => {
-    describe('Event parsing', () => {
+  describe('GetIRRepeaterState', () => {
+    it('executes correct request', async (done) => {
+      TestHelpers.mockRequestToService('/HTControl/Control',
+        'HTControl',
+        'GetIRRepeaterState',
+        '',
+        '<CurrentIRRepeaterState>Disabled</CurrentIRRepeaterState>'
+      );
+      const service = new HTControlService(TestHelpers.testHost);
+      const result = await service.GetIRRepeaterState();
+
+      expect(result.CurrentIRRepeaterState).to.be.equal('Disabled');
+      done();
+    });
+  });
+  describe('GetLEDFeedbackState', () => {
+    it('executes correct request', async (done) => {
+      TestHelpers.mockRequestToService('/HTControl/Control',
+        'HTControl',
+        'GetLEDFeedbackState',
+        '',
+        '<LEDFeedbackState>On</LEDFeedbackState>'
+      );
+      const service = new HTControlService(TestHelpers.testHost);
+      const result = await service.GetLEDFeedbackState();
+
+      expect(result.LEDFeedbackState).to.be.equal('On');
+      done();
+    });
+  });
+  describe('Event parsing', () => {
     it('works', (done) => {
       process.env.SONOS_DISABLE_EVENTS = 'true'
       const service = new HTControlService(TestHelpers.testHost, 1400);

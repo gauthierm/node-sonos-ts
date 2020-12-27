@@ -21,10 +21,10 @@ export default class MetadataHelper {
     const parsedItem = didl as {[key: string]: any };
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
-      Album: XmlHelper.EncodeXmlUndefined(didlItem['upnp:album']),
-      Artist: XmlHelper.EncodeXmlUndefined(didlItem['dc:creator']),
+      Album: XmlHelper.DecodeHtml(didlItem['upnp:album']),
+      Artist: XmlHelper.DecodeHtml(didlItem['dc:creator']),
       AlbumArtUri: undefined,
-      Title: XmlHelper.EncodeXmlUndefined(didlItem['dc:title']),
+      Title: XmlHelper.DecodeHtml(didlItem['dc:title']),
       UpnpClass: didlItem['upnp:class'],
       Duration: undefined,
       ItemId: didlItem._id,
@@ -35,13 +35,13 @@ export default class MetadataHelper {
     if (didlItem['r:streamContent'] && typeof didlItem['r:streamContent'] === 'string' && track.Artist === undefined) {
       const streamContent = (didlItem['r:streamContent'] as string).split('-');
       if (streamContent.length === 2) {
-        track.Artist = XmlHelper.EncodeXmlUndefined(streamContent[0].trim());
-        track.Title = XmlHelper.EncodeXmlUndefined(streamContent[1].trim());
+        track.Artist = XmlHelper.DecodeHtml(streamContent[0].trim());
+        track.Title = XmlHelper.DecodeHtml(streamContent[1].trim());
       } else {
-        track.Artist = XmlHelper.EncodeXmlUndefined(streamContent[0].trim());
+        track.Artist = XmlHelper.DecodeHtml(streamContent[0].trim());
         if (didlItem['r:radioShowMd'] && typeof didlItem['r:radioShowMd'] === 'string') {
           const radioShowMd = (didlItem['r:radioShowMd'] as string).split(',');
-          track.Title = XmlHelper.EncodeXmlUndefined(radioShowMd[0].trim());
+          track.Title = XmlHelper.DecodeHtml(radioShowMd[0].trim());
         }
       }
     }

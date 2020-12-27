@@ -1,8 +1,10 @@
 import { parse } from 'fast-xml-parser';
-import { XmlEntities } from 'html-entities';
+import { XmlEntities, AllHtmlEntities } from 'html-entities';
 
 export default class XmlHelper {
-  private static entities = new XmlEntities();
+  private static xmlEntities = new XmlEntities();
+
+  private static htmlEntities = new AllHtmlEntities();
 
   /**
    * Decode an encoded xml string
@@ -16,8 +18,22 @@ export default class XmlHelper {
     if (typeof text !== 'string' || text === '') {
       return undefined;
     }
+    return XmlHelper.xmlEntities.decode(text);
+  }
 
-    return XmlHelper.entities.decode(text);
+  /**
+   * Decode an encoded html string
+   *
+   * @static
+   * @param {string} text Encoded html
+   * @returns {string|undefined} Decoded html
+   * @memberof XmlHelper
+   */
+  static DecodeHtml(text: unknown): string | undefined {
+    if (typeof text !== 'string' || text === '') {
+      return undefined;
+    }
+    return XmlHelper.htmlEntities.decode(text);
   }
 
   /**
@@ -57,7 +73,7 @@ export default class XmlHelper {
    */
   static EncodeXml(xml: unknown): string {
     if (typeof xml !== 'string' || xml === '') return '';
-    return XmlHelper.entities.encode(xml);
+    return XmlHelper.xmlEntities.encode(xml);
   }
 
   static EncodeXmlUndefined(xml: unknown): string | undefined {
@@ -65,7 +81,7 @@ export default class XmlHelper {
       return undefined;
     }
     if (typeof xml === 'string') {
-      return xml === '' ? undefined : XmlHelper.entities.encode(xml);
+      return xml === '' ? undefined : XmlHelper.xmlEntities.encode(xml);
     }
 
     return XmlHelper.EncodeXml(`${xml}`);
