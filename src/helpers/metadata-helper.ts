@@ -47,7 +47,9 @@ export default class MetadataHelper {
     }
     if (didlItem['upnp:albumArtURI']) {
       const uri = Array.isArray(didlItem['upnp:albumArtURI']) ? didlItem['upnp:albumArtURI'][0] : didlItem['upnp:albumArtURI'];
-      const art = (uri as string).replace(/&amp;/gi, '&').replace(/%25/g, '%').replace(/%3a/gi, ':');
+      // Github user @hklages discovered that the album uri sometimes doesn't work because of encoding:
+      // See https://github.com/svrooij/node-sonos-ts/issues/93 if you found and album art uri that doesn't work.
+      const art = (uri as string).replace(/&amp;/gi, '&'); // .replace(/%25/g, '%').replace(/%3a/gi, ':');
       track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
     }
 

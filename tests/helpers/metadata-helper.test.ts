@@ -100,6 +100,24 @@ describe('MetadataHelper', () => {
       done();
     });
 
+    it('decodes spotify album art uri correctly', (done) => {
+      const hostName = 'fake_host'
+      const albumArt = '/getaa?s=1&amp;u=x-sonos-spotify%3aspotify%253atrack%253a0WS5DKZ6QnHvFYBk8lRRm0%3fsid%3d9%26flags%3d8224%26sn%3d7';
+      const expectedUri = `http://${hostName}:1400/getaa?s=1&u=x-sonos-spotify%3aspotify%253atrack%253a0WS5DKZ6QnHvFYBk8lRRm0%3fsid%3d9%26flags%3d8224%26sn%3d7`;
+      const didl = {
+        'upnp:albumArtURI': albumArt,
+        'upnp:album': 'CeeLo&apos;s Magic Moment', 
+        'dc:creator': 'CeeLo Green',
+        'dc:title': 'This Christmas'
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).to.have.property('Album', 'CeeLo\'s Magic Moment');
+      expect(result).to.have.property('AlbumArtUri', expectedUri);
+      expect(result).to.have.property('Artist', 'CeeLo Green');
+      expect(result).to.have.property('Title', 'This Christmas');
+      done();
+    });
+
     it('parsed r:streamContent correctly 2', (done) => {
       const artist = 'Guus Meeuwis';
       const title = 'Brabant'
@@ -116,7 +134,7 @@ describe('MetadataHelper', () => {
       done();
     });
 
-    it('parsed r:streamContent and r:radioShowMd correctly', () => {
+    it('parsed r:streamContent and r:radioShowMd correctly', (done) => {
       const artist = 'Guus Meeuwis';
       const title = 'Brabant'
       const id = 'FAKE_ITEM_ID'
@@ -130,9 +148,10 @@ describe('MetadataHelper', () => {
       expect(result).to.have.nested.property('Artist', artist);
       expect(result).to.have.nested.property('Title', title);
       expect(result).to.have.nested.property('ItemId', id);
+      done();
     })
 
-    it('parsed r:streamContent', () => {
+    it('parsed r:streamContent', (done) => {
       const artist = 'Guus Meeuwis';
       const id = 'FAKE_ITEM_ID'
       const didl = {
@@ -143,8 +162,9 @@ describe('MetadataHelper', () => {
       expect(result).to.be.an('object');
       expect(result).to.have.nested.property('Artist', artist);
       expect(result).to.have.nested.property('ItemId', id);
-    })
-  })
+      done();
+    });
+  });
 
   describe('TrackToMetaData', () => {
     it('includes resource', () => {
