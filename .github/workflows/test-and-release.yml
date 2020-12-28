@@ -34,11 +34,6 @@ jobs:
     - name: Run tests
       if: ${{ always() }}
       run: npm run jest
-    - name: Send data to Coveralls
-      if: ${{ always() }}
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
     - uses: svrooij/secret-gate-action@v1
       id: mygate
       with:
@@ -52,3 +47,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Send data to Coveralls
+      if: ${{ always() }}
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
